@@ -17,7 +17,7 @@ int main() {
   while(1){
     from_client = server_handshake( &to_client );
       char mess[BUFFER_SIZE];
-      char send_to_c[BUFFER_SIZE]
+      char send_to_c[BUFFER_SIZE];
       while(read(from_client, mess, BUFFER_SIZE)){
         printf("The message recieved from client: %s\n",mess);
 
