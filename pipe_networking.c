@@ -12,17 +12,17 @@
   =========================*/
 int server_handshake(int *to_client) {
   printf("making WKP pipe\n");
-   mkfifo("WKP",0644);
+   mkfifo("to_server",0644);
 
    printf("Connecting to WKP\n");
    printf("Waiting for client to respond\n");
 
-   int wkp_fd = open("WKP",O_RDONLY);
+   int wkp_fd = open("to_server",O_RDONLY);
    printf("Connected to WKP\n");
 
    char pipe_n[HANDSHAKE_BUFFER_SIZE];
    read(wkp_fd, pipe_n, HANDSHAKE_BUFFER_SIZE);
-   remove("WKP");
+   remove("to_server");
 
    int pvt_fd = open(pipe_n,O_WRONLY);
    printf("Sending message to client \n" );
@@ -51,21 +51,21 @@ int server_handshake(int *to_client) {
   =========================*/
 int client_handshake(int *to_server) {
 
-    mkfifo("PRVP",0644);
+    mkfifo("to_client",0644);
 
     printf("made private pipe\n");
 
-    int wkp_fd = open("WKP",O_WRONLY);
+    int wkp_fd = open("to_server",O_WRONLY);
     char pipe_n[HANDSHAKE_BUFFER_SIZE] = "to_client";
     write(wkp_fd,pipe_n,HANDSHAKE_BUFFER_SIZE);
     printf("sent the file name\n");
 
-    int pvt_fd = open("PRVP",O_RDONLY);
+    int pvt_fd = open("to_client",O_RDONLY);
     char ack_mes[HANDSHAKE_BUFFER_SIZE];
     read(pvt_fd,ack_mes,HANDSHAKE_BUFFER_SIZE);
     printf("Response recieved from server, sending message\n" );
     printf("read message %s\n", ack_mes);
-    remove("PRVP");
+    remove("to_client");
 
     write(wkp_fd, ack_mes, HANDSHAKE_BUFFER_SIZE);
     printf("Message sent. Connection established with server\n");

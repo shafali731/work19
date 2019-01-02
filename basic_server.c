@@ -4,7 +4,7 @@
 
 static void sighandler(int signo){
   if (signo == SIGINT) {
-    remove("WKP");
+    remove("to_server");
     exit(0);
   }
 }
